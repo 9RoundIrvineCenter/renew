@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>9Round Irvine Center - Renew Membership</title>
+  <link rel="icon" type="image/png" sizes="96x96" href="images/favicon-96x96.png">
+  <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+  <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+  <button class="theme-toggle" aria-label="Toggle theme" title="Toggle light/dark mode">
+    <span class="theme-icon">🌙</span>
+  </button>
+  <div class="container">
+    <div class="logo-container">
+      <img src="images/9round-white-logo.png" alt="9Round Logo" class="logo">
+    </div>
+
+    <div class="benefits-section">
+      <ul class="benefits-list">
+        <li>4 AM - 11 PM door access</li>
+        <li>Guest privileges*</li>
+        <li>Monthly scans</li>
+        <li>Personal training discount</li>
+        <li>9ROUND App: Workout anywhere, Track workouts & heart rate, Weekly & monthly challenges, Daily meal plans.</li>
+      </ul>
+    </div>
+
+    <div class="pricing-grid">
+      <!-- Unlimited Sessions -->
+      <div class="pricing-tier">
+        <h2 class="tier-title">UNLIMITED SESSIONS</h2>
+        
+        <div class="pricing-option pif-option">
+          <h3 class="option-title">6-Month Paid In Full</h3>
+          <div class="price">$918<span class="highlight-badge">2 MONTHS FREE</span></div>
+          <p class="price-note">6 consecutive months</p>
+          <p class="option-note">No freeze option</p>
+          <a href="#" class="renew-button" data-url="https://www.clubready.com/JoinUs/9261/516774">RENEW</a>
+        </div>
+
+        <div class="pricing-option monthly-option">
+          <h3 class="option-title">Month-to-Month</h3>
+          <div class="price">$228<span class="price-period">/month</span></div>
+          <p class="option-note">Cancel anytime with 30-day notice</p>
+          <p class="option-note">Freeze option ($5 monthly)</p>
+          <a href="#" class="renew-button" data-url="https://app.clubready.com/JoinUs/9261/520974">RENEW</a>
+        </div>
+      </div>
+
+      <!-- 8 Sessions -->
+      <div class="pricing-tier">
+        <h2 class="tier-title">8 SESSIONS</h2>
+        
+        <div class="pricing-option pif-option">
+          <h3 class="option-title">6-Month Paid In Full</h3>
+          <div class="price">$786<span class="highlight-badge">2 MONTHS FREE</span></div>
+          <p class="price-note">6 consecutive months</p>
+          <p class="option-note">No freeze option</p>
+          <a href="#" class="renew-button" data-url="https://app.clubready.com/JoinUs/9261/558503">RENEW</a>
+        </div>
+
+        <div class="pricing-option monthly-option">
+          <h3 class="option-title">Month-to-Month</h3>
+          <div class="price">$188<span class="price-period">/month</span></div>
+          <p class="option-note">Cancel anytime with 30-day notice</p>
+          <p class="option-note">Freeze option ($5 monthly)</p>
+          <a href="#" class="renew-button" data-url="https://app.clubready.com/JoinUs/9261/544039">RENEW</a>
+        </div>
+      </div>
+
+      <!-- 4 Sessions -->
+      <div class="pricing-tier">
+        <h2 class="tier-title">4 SESSIONS</h2>
+        
+        <div class="pricing-option pif-option">
+          <h3 class="option-title">6-Month Paid In Full</h3>
+          <div class="price">$546<span class="highlight-badge">2 MONTHS FREE</span></div>
+          <p class="price-note">6 consecutive months</p>
+          <p class="option-note">No freeze option</p>
+          <a href="#" class="renew-button" data-url="https://app.clubready.com/JoinUs/9261/558501">RENEW</a>
+        </div>
+
+        <div class="pricing-option monthly-option">
+          <h3 class="option-title">Month-to-Month</h3>
+          <div class="price">$138<span class="price-period">/month</span></div>
+          <p class="option-note">Cancel anytime with 30-day notice</p>
+          <p class="option-note">Freeze option ($5 monthly)</p>
+          <a href="#" class="renew-button" data-url="https://app.clubready.com/JoinUs/9261/558485">RENEW</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="guest-note">
+      <p>*Guest must be new to 9Round or haven't visited in 6+ months. Max 4 lifetime visits. Must check-in and be with a member during Trainer-Led hours.</p>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-line"></div>
+    <div class="footer-content">
+      <p class="copyright">&copy; 2026 9Round Irvine Center. All rights reserved.</p>
+      <p class="contact-info">
+        <a href="tel:949-431-6679">949-431-6679</a> | 
+        <a href="mailto:irvinecenterdrirvineca@9round.com">irvinecenterdrirvineca@9round.com</a>
+      </p>
+    </div>
+  </footer>
+
+  <!-- Renewal Modal -->
+  <div id="renewalModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Renew Membership</h3>
+        <button class="modal-close" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <iframe id="renewalIframe" src="" frameborder="0"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Theme management
+    (function() {
+      const themeToggle = document.querySelector('.theme-toggle');
+      const themeIcon = document.querySelector('.theme-icon');
+      const html = document.documentElement;
+      
+      // Get saved theme or detect system preference
+      function getInitialTheme() {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+          return savedTheme;
+        }
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+      
+      // Apply theme
+      function setTheme(theme) {
+        html.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+        themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
+      }
+      
+      // Initialize theme
+      setTheme(getInitialTheme());
+      
+      // Toggle theme on button click
+      themeToggle.addEventListener('click', () => {
+        const currentTheme = html.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        setTheme(newTheme);
+      });
+      
+      // Listen for system theme changes (optional)
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+        // Only auto-switch if user hasn't manually set a preference
+        if (!localStorage.getItem('theme')) {
+          setTheme(e.matches ? 'dark' : 'light');
+        }
+      });
+    })();
+
+    // Modal functionality
+    const modal = document.getElementById('renewalModal');
+    const modalIframe = document.getElementById('renewalIframe');
+    const modalClose = document.querySelector('.modal-close');
+
+    function showModal(url) {
+      modalIframe.src = url;
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    }
+
+    function closeModal() {
+      modal.style.display = 'none';
+      modalIframe.src = ''; // Clear iframe to stop loading
+      document.body.style.overflow = ''; // Restore scrolling
+    }
+
+    // Close modal handlers
+    modalClose.addEventListener('click', closeModal);
+    
+    // Close modal when clicking outside
+    window.addEventListener('click', function(event) {
+      if (event.target === modal) {
+        closeModal();
+      }
+    });
+
+    // Close modal on Escape key
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape' && modal.style.display === 'flex') {
+        closeModal();
+      }
+    });
+
+    // Add click handlers for RENEW buttons
+    document.querySelectorAll('.renew-button').forEach(button => {
+      button.addEventListener('click', function(e) {
+        e.preventDefault();
+        const url = this.getAttribute('data-url');
+        if (url && url !== '#' && !url.startsWith('PLACEHOLDER')) {
+          showModal(url);
+        } else {
+          console.log('Placeholder URL for:', this.getAttribute('data-url'));
+          alert('Renewal URL will be added soon. Please contact the gym for renewal options.');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
+
+

@@ -114,10 +114,9 @@
     <div class="modal-content">
       <div class="modal-header">
         <h3 class="modal-title">Renew Membership</h3>
-        <button class="modal-close modal-close-header" aria-label="Close modal">&times;</button>
+        <button class="modal-close" aria-label="Close modal">&times;</button>
       </div>
       <div class="modal-body">
-        <button class="modal-close modal-close-floating" aria-label="Close modal">&times;</button>
         <iframe id="renewalIframe" src="" frameborder="0"></iframe>
       </div>
     </div>
@@ -168,35 +167,22 @@
     // Modal functionality
     const modal = document.getElementById('renewalModal');
     const modalIframe = document.getElementById('renewalIframe');
-    const modalCloseButtons = document.querySelectorAll('.modal-close');
-    let modalHistoryState = null;
+    const modalClose = document.querySelector('.modal-close');
 
     function showModal(url) {
       modalIframe.src = url;
       modal.style.display = 'flex';
       document.body.style.overflow = 'hidden'; // Prevent background scrolling
-      
-      // Add history state for browser back button
-      modalHistoryState = { modalOpen: true, url: url };
-      history.pushState(modalHistoryState, '', window.location.href);
     }
 
     function closeModal() {
       modal.style.display = 'none';
       modalIframe.src = ''; // Clear iframe to stop loading
       document.body.style.overflow = ''; // Restore scrolling
-      
-      // Go back in history if we pushed a state
-      if (modalHistoryState && history.state && history.state.modalOpen) {
-        history.back();
-      }
-      modalHistoryState = null;
     }
 
-    // Close modal handlers for all close buttons
-    modalCloseButtons.forEach(button => {
-      button.addEventListener('click', closeModal);
-    });
+    // Close modal handlers
+    modalClose.addEventListener('click', closeModal);
     
     // Close modal when clicking outside
     window.addEventListener('click', function(event) {
@@ -208,13 +194,6 @@
     // Close modal on Escape key
     document.addEventListener('keydown', function(event) {
       if (event.key === 'Escape' && modal.style.display === 'flex') {
-        closeModal();
-      }
-    });
-
-    // Handle browser back button
-    window.addEventListener('popstate', function(event) {
-      if (modal.style.display === 'flex') {
         closeModal();
       }
     });

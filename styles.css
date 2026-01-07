@@ -375,10 +375,12 @@ footer {
   top: 0;
   width: 100%;
   height: 100%;
+  height: 100dvh; /* Dynamic viewport height for mobile browsers */
   background-color: rgba(0, 0, 0, 0.75);
   align-items: center;
   justify-content: center;
   animation: fadeIn 0.3s ease;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
 
 .modal-content {
@@ -386,8 +388,10 @@ footer {
   border-radius: 12px;
   max-width: 95%;
   max-height: 95vh;
+  max-height: 95dvh; /* Dynamic viewport height for mobile browsers */
   width: 1200px;
   height: 90vh;
+  height: 90dvh; /* Dynamic viewport height for mobile browsers */
   position: relative;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
   animation: slideUp 0.3s ease;
@@ -402,8 +406,10 @@ footer {
   justify-content: space-between;
   align-items: center;
   padding: 20px 25px;
+  padding-top: max(20px, env(safe-area-inset-top));
   border-bottom: 1px solid var(--border-color);
   transition: border-color 0.3s ease;
+  flex-shrink: 0;
 }
 
 .modal-title {
@@ -581,13 +587,14 @@ footer {
   .modal-content {
     width: 100%;
     max-width: 100%;
-    height: 100vh;
-    max-height: 100vh;
+    height: 100dvh;
+    max-height: 100dvh;
     border-radius: 0;
   }
 
   .modal-header {
     padding: 15px 20px;
+    padding-top: max(15px, calc(env(safe-area-inset-top) + 15px));
   }
 
   .modal-title {

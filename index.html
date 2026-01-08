@@ -10,9 +10,14 @@
   <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
-  <button class="theme-toggle" aria-label="Toggle theme" title="Toggle light/dark mode">
-    <span class="theme-icon">🌙</span>
-  </button>
+  <div class="toggle-group">
+    <button class="mode-toggle" aria-label="Switch between Enroll and Renew" title="Switch between Enroll and Renew">
+      <span class="mode-icon">⇄</span>
+    </button>
+    <button class="theme-toggle" aria-label="Toggle theme" title="Toggle light/dark mode">
+      <span class="theme-icon">🌙</span>
+    </button>
+  </div>
   <div class="container">
     <div class="logo-container">
       <img src="images/9round-white-logo.png" alt="9Round Logo" class="logo">
@@ -214,6 +219,24 @@
         // Only auto-switch if user hasn't manually set a preference
         if (!localStorage.getItem('theme')) {
           setTheme(e.matches ? 'dark' : 'light');
+        }
+      });
+    })();
+
+    // Enroll/Renew mode switching
+    (function() {
+      const modeToggle = document.querySelector('.mode-toggle');
+      const currentHost = window.location.hostname;
+      const isRenew = currentHost.includes('renew') || (currentHost !== 'enroll.9roundirvine.com' && currentHost !== 'localhost' && currentHost !== '127.0.0.1');
+      
+      // Handle toggle click
+      modeToggle.addEventListener('click', () => {
+        if (isRenew) {
+          // Switch to Enroll
+          window.location.href = 'https://enroll.9roundirvine.com';
+        } else {
+          // Switch to Renew
+          window.location.href = 'https://renew.9roundirvine.com';
         }
       });
     })();

@@ -958,7 +958,7 @@ footer {
   height: 100%;
   border: none;
   display: block;
-  clip-path: inset(16.1% 0 0 0);
+  clip-path: inset(110px 0 0 0);
   position: relative;
 }
 

@@ -255,16 +255,23 @@
     let loaderTimeout;
 
     function showModal(url) {
-      modalIframe.src = url;
+      // Show loader immediately
+      modalLoader.style.display = 'flex';
       modal.style.display = 'flex';
       document.body.style.overflow = 'hidden'; // Prevent background scrolling
       
-      // Show loader after 500ms if still loading
+      // Clear any existing timeout
+      if (loaderTimeout) {
+        clearTimeout(loaderTimeout);
+      }
+      
+      // Set iframe source
+      modalIframe.src = url;
+      
+      // Fallback: Hide loader after 30 seconds even if load/error events don't fire
       loaderTimeout = setTimeout(() => {
-        if (modalIframe.src && !modalIframe.complete) {
-          modalLoader.style.display = 'flex';
-        }
-      }, 500);
+        modalLoader.style.display = 'none';
+      }, 30000);
     }
 
     function closeModal() {
@@ -277,12 +284,21 @@
       }
     }
 
-    // Hide loader when iframe loads
+    // Hide loader when iframe loads successfully
     modalIframe.addEventListener('load', function() {
       modalLoader.style.display = 'none';
       if (loaderTimeout) {
         clearTimeout(loaderTimeout);
       }
+    });
+
+    // Handle iframe load errors
+    modalIframe.addEventListener('error', function() {
+      modalLoader.style.display = 'none';
+      if (loaderTimeout) {
+        clearTimeout(loaderTimeout);
+      }
+      console.error('Failed to load iframe content');
     });
 
     // Close modal handlers

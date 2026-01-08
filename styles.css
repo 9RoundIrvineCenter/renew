@@ -980,7 +980,20 @@ footer {
 .savings-membership-info {
   margin-bottom: 32px;
   padding-bottom: 24px;
-  border-bottom: 2px solid var(--border-color);
+  position: relative;
+}
+
+.savings-membership-info::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent-red), transparent);
+  border-radius: 1px;
+  opacity: 0.6;
 }
 
 .savings-membership-title {

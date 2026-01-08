@@ -1346,6 +1346,20 @@ footer {
     line-height: 1.2;
   }
 
+  .modal-refresh {
+    padding: 6px;
+    width: 32px;
+    gap: 0;
+  }
+
+  .refresh-text {
+    display: none;
+  }
+
+  .refresh-icon {
+    font-size: 18px;
+  }
+
   .modal-iframe-overlay {
     padding: 0 20px;
     min-height: 110px;

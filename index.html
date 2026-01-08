@@ -133,7 +133,13 @@
     <div class="modal-content">
       <div class="modal-header">
         <h3 class="modal-title">MEMBERSHIP RENEWAL</h3>
-        <button class="modal-close" aria-label="Close modal">&times;</button>
+        <div class="modal-header-actions">
+          <button class="modal-refresh" aria-label="Refresh content" title="Refresh content">
+            <span class="refresh-icon">↻</span>
+            <span class="refresh-text">Refresh</span>
+          </button>
+          <button class="modal-close" aria-label="Close modal">&times;</button>
+        </div>
       </div>
       <div class="modal-body">
         <div class="modal-iframe-overlay">
@@ -251,6 +257,7 @@
     const modal = document.getElementById('renewalModal');
     const modalIframe = document.getElementById('renewalIframe');
     const modalClose = document.querySelector('.modal-close');
+    const modalRefresh = document.querySelector('.modal-refresh');
     const modalLoader = document.getElementById('modalLoader');
     let loaderTimeout;
 
@@ -299,6 +306,19 @@
         clearTimeout(loaderTimeout);
       }
       console.error('Failed to load iframe content');
+    });
+
+    // Refresh button click handler
+    modalRefresh.addEventListener('click', function() {
+      if (!modalIframe.src) return;
+      modalLoader.style.display = 'flex';
+      if (loaderTimeout) {
+        clearTimeout(loaderTimeout);
+      }
+      modalIframe.src = modalIframe.src;
+      loaderTimeout = setTimeout(() => {
+        modalLoader.style.display = 'none';
+      }, 30000);
     });
 
     // Close modal handlers

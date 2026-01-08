@@ -491,6 +491,16 @@ body {
   letter-spacing: 0.5px;
 }
 
+.price-per-session {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  text-align: center;
+  margin-top: -8px;
+  margin-bottom: 12px;
+  letter-spacing: 0.3px;
+}
+
 .price-note {
   font-size: 13px;
   color: var(--text-secondary);

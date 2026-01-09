@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>9Round Irvine Center - Renew Membership</title>
+  <title>9Round Irvine Center - Membership Options</title>
   <link rel="icon" type="image/png" sizes="96x96" href="images/favicon-96x96.png">
   <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
   <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
@@ -29,9 +29,29 @@
       </ul>
     </div>
 
+    <!-- Pricing Filter Tabs -->
+    <div class="pricing-tabs">
+      <button class="pricing-tab active" data-filter="all">
+        <span class="tab-icon">☰</span>
+        <span class="tab-text">ALL</span>
+      </button>
+      <button class="pricing-tab" data-filter="unlimited">
+        <span class="tab-icon">∞</span>
+        <span class="tab-text">UNLIMITED</span>
+      </button>
+      <button class="pricing-tab" data-filter="eight">
+        <span class="tab-icon">8</span>
+        <span class="tab-text">EIGHT</span>
+      </button>
+      <button class="pricing-tab" data-filter="four">
+        <span class="tab-icon">4</span>
+        <span class="tab-text">FOUR</span>
+      </button>
+    </div>
+
     <div class="pricing-grid">
       <!-- Unlimited Sessions -->
-      <div class="pricing-tier">
+      <div class="pricing-tier" data-tier="unlimited">
         <h2 class="tier-title">UNLIMITED SESSIONS</h2>
         
         <div class="pricing-option pif-option">
@@ -55,7 +75,7 @@
       </div>
 
       <!-- 8 Sessions -->
-      <div class="pricing-tier">
+      <div class="pricing-tier" data-tier="eight">
         <h2 class="tier-title">8 SESSIONS</h2>
         
         <div class="pricing-option pif-option">
@@ -79,7 +99,7 @@
       </div>
 
       <!-- 4 Sessions -->
-      <div class="pricing-tier">
+      <div class="pricing-tier" data-tier="four">
         <h2 class="tier-title">4 SESSIONS</h2>
         
         <div class="pricing-option pif-option">
@@ -410,6 +430,79 @@
         }
       });
     });
+
+    // Sticky tabs on scroll
+    (function() {
+      const pricingTabs = document.querySelector('.pricing-tabs');
+      let lastScrollTop = 0;
+      
+      function handleScroll() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        
+        if (scrollTop > 100) {
+          pricingTabs.classList.add('scrolled');
+        } else {
+          pricingTabs.classList.remove('scrolled');
+        }
+        
+        lastScrollTop = scrollTop;
+      }
+      
+      window.addEventListener('scroll', handleScroll, { passive: true });
+      handleScroll(); // Check initial state
+    })();
+
+    // Pricing Filter Tabs functionality
+    (function() {
+      const tabs = document.querySelectorAll('.pricing-tab');
+      const tiers = document.querySelectorAll('.pricing-tier');
+      const pricingGrid = document.querySelector('.pricing-grid');
+      
+      tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+          const filter = this.getAttribute('data-filter');
+          
+          // Update active tab
+          tabs.forEach(t => t.classList.remove('active'));
+          this.classList.add('active');
+          
+          // Update grid layout class
+          if (filter === 'all') {
+            pricingGrid.classList.remove('filtered');
+          } else {
+            pricingGrid.classList.add('filtered');
+          }
+          
+          // Filter pricing tiers
+          tiers.forEach(tier => {
+            const tierType = tier.getAttribute('data-tier');
+            
+            if (filter === 'all' || tierType === filter) {
+              // Add filtered class if not showing all
+              if (filter !== 'all') {
+                tier.classList.add('filtered-tier');
+                tier.style.display = 'grid';
+              } else {
+                tier.classList.remove('filtered-tier');
+                tier.style.display = 'block';
+              }
+              // Trigger animation
+              setTimeout(() => {
+                tier.style.opacity = '1';
+                tier.style.transform = 'translateY(0)';
+              }, 10);
+            } else {
+              tier.classList.remove('filtered-tier');
+              tier.style.opacity = '0';
+              tier.style.transform = 'translateY(20px)';
+              setTimeout(() => {
+                tier.style.display = 'none';
+              }, 300);
+            }
+          });
+        });
+      });
+    })();
   </script>
 </body>
 </html>

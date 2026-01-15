@@ -298,10 +298,48 @@
       // Set iframe source
       modalIframe.src = url;
       
-      // Fallback: Hide loader after 30 seconds even if load/error events don't fire
+      // Start periodic check for blocked/stuck iframe
+      let checkCount = 0;
+      loadCheckInterval = setInterval(() => {
+        checkCount++;
+        
+        // After 30 seconds (10 checks * 3 seconds), check if iframe is stuck
+        if (checkCount >= 10 && modalLoader.style.display === 'flex') {
+          let iframeAccessible = false;
+          try {
+            // Try to access iframe content
+            const iframeDoc = modalIframe.contentDocument || modalIframe.contentWindow.document;
+            if (iframeDoc && iframeDoc.body) {
+              iframeAccessible = true;
+            }
+          } catch (e) {
+            // Cross-origin restriction is normal, but check console for mixed content errors
+            console.warn('Cannot access iframe content (may be cross-origin or blocked):', e.message);
+          }
+          
+          // If loader is still showing after 30 seconds, show status button
+          loaderText.textContent = 'The form may be taking longer than expected. If your order was submitted, please check your email for confirmation. You can close this window.';
+          showStatusCheckButton();
+          clearInterval(loadCheckInterval);
+          loadCheckInterval = null;
+        }
+      }, 3000); // Check every 3 seconds
+      
+      // Set a timeout that runs regardless of load status (handles blocked iframes)
+      // This will trigger even if the iframe is blocked by mixed content
       loaderTimeout = setTimeout(() => {
-        modalLoader.style.display = 'none';
-      }, 30000);
+        // Check if loader is still showing (iframe might be blocked)
+        if (modalLoader.style.display === 'flex') {
+          loaderText.textContent = 'The form may be taking longer than expected. If your order was submitted, please check your email for confirmation. You can close this window.';
+          showStatusCheckButton();
+          
+          // Clear the interval if timeout fires
+          if (loadCheckInterval) {
+            clearInterval(loadCheckInterval);
+            loadCheckInterval = null;
+          }
+        }
+      }, 30000); // 30 seconds
     }
 
     function closeModal() {
@@ -334,10 +372,16 @@
 
     // Enhanced load event handler - fires on every navigation including post-submission
     modalIframe.addEventListener('load', function() {
-      // Clear initial loader timeout
+      // Clear initial loader timeout since iframe loaded
       if (loaderTimeout) {
         clearTimeout(loaderTimeout);
         loaderTimeout = null;
+      }
+      
+      // Clear the periodic check interval since iframe loaded
+      if (loadCheckInterval) {
+        clearInterval(loadCheckInterval);
+        loadCheckInterval = null;
       }
       
       // Hide loader after a short delay to ensure content is rendered

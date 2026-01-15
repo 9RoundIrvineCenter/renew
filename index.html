@@ -175,6 +175,7 @@
         <div class="modal-loader" id="modalLoader">
           <div class="loader-spinner"></div>
           <p class="loader-text">Loading...</p>
+          <button class="status-check-btn" style="display:none; margin-top: 20px; padding: 10px 20px; background: #dc2626; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: 600;">Check Status / Close</button>
         </div>
         <iframe id="renewalIframe" src="" frameborder="0"></iframe>
       </div>
@@ -261,7 +262,12 @@
     const modalClose = document.querySelector('.modal-close');
     const modalRefresh = document.querySelector('.modal-refresh');
     const modalLoader = document.getElementById('modalLoader');
+    const loaderText = modalLoader.querySelector('.loader-text');
+    const statusCheckBtn = modalLoader.querySelector('.status-check-btn');
     let loaderTimeout;
+    let submissionTimeout;
+    let loadCheckInterval;
+    let lastIframeUrl = '';
 
     function showModal(url) {
       // Show loader immediately
@@ -269,10 +275,25 @@
       modal.style.display = 'flex';
       document.body.style.overflow = 'hidden'; // Prevent background scrolling
       
-      // Clear any existing timeout
+      // Reset loader text and hide status button
+      loaderText.textContent = 'Loading...';
+      statusCheckBtn.style.display = 'none';
+      
+      // Clear any existing timeouts/intervals
       if (loaderTimeout) {
         clearTimeout(loaderTimeout);
+        loaderTimeout = null;
       }
+      if (submissionTimeout) {
+        clearTimeout(submissionTimeout);
+        submissionTimeout = null;
+      }
+      if (loadCheckInterval) {
+        clearInterval(loadCheckInterval);
+        loadCheckInterval = null;
+      }
+      
+      lastIframeUrl = url;
       
       // Set iframe source
       modalIframe.src = url;
@@ -288,39 +309,132 @@
       modalIframe.src = ''; // Clear iframe to stop loading
       document.body.style.overflow = ''; // Restore scrolling
       modalLoader.style.display = 'none'; // Hide loader
+      loaderText.textContent = 'Loading...';
+      statusCheckBtn.style.display = 'none';
+      
       if (loaderTimeout) {
         clearTimeout(loaderTimeout);
+        loaderTimeout = null;
       }
+      if (submissionTimeout) {
+        clearTimeout(submissionTimeout);
+        submissionTimeout = null;
+      }
+      if (loadCheckInterval) {
+        clearInterval(loadCheckInterval);
+        loadCheckInterval = null;
+      }
+      
+      lastIframeUrl = '';
     }
 
-    // Hide loader when iframe loads successfully
+    function showStatusCheckButton() {
+      statusCheckBtn.style.display = 'block';
+    }
+
+    // Enhanced load event handler - fires on every navigation including post-submission
     modalIframe.addEventListener('load', function() {
-      modalLoader.style.display = 'none';
+      // Clear initial loader timeout
       if (loaderTimeout) {
         clearTimeout(loaderTimeout);
+        loaderTimeout = null;
       }
+      
+      // Hide loader after a short delay to ensure content is rendered
+      setTimeout(() => {
+        modalLoader.style.display = 'none';
+        statusCheckBtn.style.display = 'none';
+      }, 500);
+      
+      // Try to detect if we're on a success/confirmation page
+      try {
+        // Check if iframe URL changed (may be blocked by same-origin policy)
+        const currentUrl = modalIframe.src;
+        if (currentUrl !== lastIframeUrl && (currentUrl.includes('success') || currentUrl.includes('confirm'))) {
+          // Likely on success page
+          console.log('Detected potential success page');
+        }
+        lastIframeUrl = currentUrl;
+      } catch (e) {
+        // Cross-origin restriction - can't access iframe.contentWindow
+        // This is expected for ClubReady
+      }
+      
+      // Monitor for stuck loading state after form submission
+      // If loader is still showing after 2 minutes, show user feedback
+      if (submissionTimeout) {
+        clearTimeout(submissionTimeout);
+      }
+      
+      submissionTimeout = setTimeout(() => {
+        // Check if loader is still visible (might indicate stuck state)
+        if (modalLoader.style.display === 'flex') {
+          loaderText.textContent = 'Processing may be taking longer than expected. If your order was submitted, please check your email for confirmation.';
+          showStatusCheckButton();
+        }
+      }, 120000); // 2 minutes after load event
     });
 
     // Handle iframe load errors
     modalIframe.addEventListener('error', function() {
       modalLoader.style.display = 'none';
+      statusCheckBtn.style.display = 'none';
+      
       if (loaderTimeout) {
         clearTimeout(loaderTimeout);
+        loaderTimeout = null;
       }
+      if (submissionTimeout) {
+        clearTimeout(submissionTimeout);
+        submissionTimeout = null;
+      }
+      
       console.error('Failed to load iframe content');
+      
+      // Show user-friendly error message
+      loaderText.textContent = 'Failed to load form. Please try refreshing or contact support.';
+      showStatusCheckButton();
     });
 
     // Refresh button click handler
     modalRefresh.addEventListener('click', function() {
       if (!modalIframe.src) return;
       modalLoader.style.display = 'flex';
+      loaderText.textContent = 'Loading...';
+      statusCheckBtn.style.display = 'none';
+      
       if (loaderTimeout) {
         clearTimeout(loaderTimeout);
       }
+      if (submissionTimeout) {
+        clearTimeout(submissionTimeout);
+      }
+      
+      lastIframeUrl = modalIframe.src;
       modalIframe.src = modalIframe.src;
+      
       loaderTimeout = setTimeout(() => {
         modalLoader.style.display = 'none';
       }, 30000);
+    });
+
+    // Status check button click handler
+    statusCheckBtn.addEventListener('click', function() {
+      closeModal();
+    });
+
+    // Listen for messages from iframe (if ClubReady supports postMessage)
+    window.addEventListener('message', function(event) {
+      // Verify origin for security
+      if (event.origin.includes('clubready.com')) {
+        if (event.data && event.data.type === 'formSubmitted') {
+          modalLoader.style.display = 'none';
+          statusCheckBtn.style.display = 'none';
+        } else if (event.data && event.data.type === 'formError') {
+          loaderText.textContent = 'An error occurred. Please try again.';
+          showStatusCheckButton();
+        }
+      }
     });
 
     // Close modal handlers

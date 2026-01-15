@@ -268,6 +268,7 @@
     let submissionTimeout;
     let loadCheckInterval;
     let lastIframeUrl = '';
+    let modalOpenTime = null;
 
     function showModal(url) {
       // Show loader immediately
@@ -295,6 +296,9 @@
       
       lastIframeUrl = url;
       
+      // Track when modal was opened
+      modalOpenTime = Date.now();
+      
       // Set iframe source
       modalIframe.src = url;
       
@@ -302,34 +306,26 @@
       let checkCount = 0;
       loadCheckInterval = setInterval(() => {
         checkCount++;
+        const timeSinceOpen = Date.now() - modalOpenTime;
         
-        // After 30 seconds (10 checks * 3 seconds), check if iframe is stuck
-        if (checkCount >= 10 && modalLoader.style.display === 'flex') {
-          let iframeAccessible = false;
-          try {
-            // Try to access iframe content
-            const iframeDoc = modalIframe.contentDocument || modalIframe.contentWindow.document;
-            if (iframeDoc && iframeDoc.body) {
-              iframeAccessible = true;
-            }
-          } catch (e) {
-            // Cross-origin restriction is normal, but check console for mixed content errors
-            console.warn('Cannot access iframe content (may be cross-origin or blocked):', e.message);
+        // After 30 seconds, always show status button (regardless of our loader state)
+        // This handles cases where ClubReady's form shows its own loading spinners
+        if (timeSinceOpen >= 30000) {
+          // Show status button if modal is still open
+          if (modal.style.display === 'flex') {
+            loaderText.textContent = 'The form may be taking longer than expected. If your order was submitted, please check your email for confirmation. You can close this window.';
+            showStatusCheckButton();
+            clearInterval(loadCheckInterval);
+            loadCheckInterval = null;
           }
-          
-          // If loader is still showing after 30 seconds, show status button
-          loaderText.textContent = 'The form may be taking longer than expected. If your order was submitted, please check your email for confirmation. You can close this window.';
-          showStatusCheckButton();
-          clearInterval(loadCheckInterval);
-          loadCheckInterval = null;
         }
-      }, 3000); // Check every 3 seconds
+      }, 1000); // Check every 1 second
       
-      // Set a timeout that runs regardless of load status (handles blocked iframes)
-      // This will trigger even if the iframe is blocked by mixed content
+      // Set a timeout that always shows status button after 30 seconds
+      // This ensures users can always close the modal, even if ClubReady's form is stuck
       loaderTimeout = setTimeout(() => {
-        // Check if loader is still showing (iframe might be blocked)
-        if (modalLoader.style.display === 'flex') {
+        // Always show status button after 30 seconds if modal is still open
+        if (modal.style.display === 'flex') {
           loaderText.textContent = 'The form may be taking longer than expected. If your order was submitted, please check your email for confirmation. You can close this window.';
           showStatusCheckButton();
           
@@ -364,6 +360,7 @@
       }
       
       lastIframeUrl = '';
+      modalOpenTime = null;
     }
 
     function showStatusCheckButton() {
@@ -411,8 +408,9 @@
       }
       
       submissionTimeout = setTimeout(() => {
-        // Check if loader is still visible (might indicate stuck state)
-        if (modalLoader.style.display === 'flex') {
+        // Always show status button after 30 seconds if modal is still open
+        // This handles cases where ClubReady's form processing gets stuck
+        if (modal.style.display === 'flex') {
           loaderText.textContent = 'Processing may be taking longer than expected. If your order was submitted, please check your email for confirmation.';
           showStatusCheckButton();
         }

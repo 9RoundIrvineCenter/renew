@@ -425,7 +425,7 @@ body {
 }
 
 .pricing-tier {
-  border: 1px solid var(--tier-border);
+  border: none;
   border-radius: 24px;
   padding: 40px;
   background-color: var(--bg-primary);
@@ -495,7 +495,6 @@ body {
 .pricing-tier:hover {
   transform: translateY(-12px);
   box-shadow: var(--shadow-xl);
-  border-color: var(--accent-red);
 }
 
 .pricing-tier:hover::before {
@@ -503,13 +502,11 @@ body {
 }
 
 [data-theme="dark"] .pricing-tier {
-  border-color: var(--tier-border);
   box-shadow: var(--shadow);
 }
 
 [data-theme="dark"] .pricing-tier:hover {
   box-shadow: var(--shadow-xl);
-  border-color: var(--accent-red);
 }
 
 .tier-title {

@@ -58,8 +58,8 @@
           <h3 class="option-title">3-Month Paid In Full</h3>
           <div class="price">$588</div>
           <div class="price-per-session">$6.53/session</div>
-          <div class="highlight-badge">0.4 MONTHS FREE</div>
-          <p class="price-note">3 consecutive months (vs. $228/mo)</p>
+          <div class="highlight-badge" data-pif="588" data-monthly="228" data-tier="Unlimited" data-renew-url="https://app.clubready.com/JoinUs/9261/522220" data-months="3">0.4 MONTHS FREE</div>
+          <p class="price-note">3 consecutive months</p>
           <p class="option-note">No freeze option</p>
           <a href="#" class="renew-button" data-url="https://app.clubready.com/JoinUs/9261/522220">RENEW</a>
         </div>
@@ -68,7 +68,7 @@
           <h3 class="option-title">6-Month Paid In Full</h3>
           <div class="price">$898</div>
           <div class="price-per-session">$4.99/session</div>
-          <div class="highlight-badge" data-pif="898" data-monthly="228" data-tier="Unlimited" data-renew-url="https://www.clubready.com/JoinUs/9261/516774">2 MONTHS FREE</div>
+          <div class="highlight-badge" data-pif="898" data-monthly="228" data-tier="Unlimited" data-renew-url="https://www.clubready.com/JoinUs/9261/516774" data-months="6">2 MONTHS FREE</div>
           <p class="price-note">6 consecutive months</p>
           <p class="option-note">No freeze option</p>
           <a href="#" class="renew-button" data-url="https://www.clubready.com/JoinUs/9261/516774">RENEW</a>
@@ -78,8 +78,8 @@
           <h3 class="option-title">12-Month Paid In Full</h3>
           <div class="price">$1458</div>
           <div class="price-per-session">$4.05/session</div>
-          <div class="highlight-badge">5.6 MONTHS FREE</div>
-          <p class="price-note">12 consecutive months (vs. $228/mo)</p>
+          <div class="highlight-badge" data-pif="1458" data-monthly="228" data-tier="Unlimited" data-renew-url="https://app.clubready.com/JoinUs/9261/516777" data-months="12">5.6 MONTHS FREE</div>
+          <p class="price-note">12 consecutive months</p>
           <p class="option-note">No freeze option</p>
           <a href="#" class="renew-button" data-url="https://app.clubready.com/JoinUs/9261/516777">RENEW</a>
         </div>
@@ -231,21 +231,21 @@
         <div class="savings-content">
           <div class="savings-membership-info">
             <div class="savings-membership-title" id="savings-tier-name">UNLIMITED SESSIONS</div>
-            <div class="savings-membership-subtitle">6-Month Paid In Full</div>
+            <div class="savings-membership-subtitle" id="savings-subtitle">6-Month Paid In Full</div>
           </div>
           <div class="savings-line">
-            <span>6 months month-to-month:</span>
+            <span id="savings-monthly-label">6 months month-to-month:</span>
             <strong id="savings-monthly-total">$0</strong>
           </div>
           <div class="savings-line">
-            <span>6 months paid in full:</span>
+            <span id="savings-pif-label">6 months paid in full:</span>
             <strong id="savings-pif-total">$0</strong>
           </div>
           <div class="savings-total">
             <span>You save:</span>
             <strong id="savings-amount">$0</strong>
           </div>
-          <div class="savings-note">That's like getting 2 months FREE!</div>
+          <div class="savings-note" id="savings-note-text">That's like getting 2 months FREE!</div>
           <a href="#" class="renew-button savings-modal-renew" id="savings-renew-button">RENEW</a>
         </div>
       </div>
@@ -541,27 +541,34 @@
       const badges = document.querySelectorAll('.highlight-badge');
       
       function showSavingsModal(badge) {
+        if (!badge.hasAttribute('data-pif')) return;
         const pifPrice = parseFloat(badge.getAttribute('data-pif'));
         const monthlyPrice = parseFloat(badge.getAttribute('data-monthly'));
         const tierName = badge.getAttribute('data-tier');
         const renewUrl = badge.getAttribute('data-renew-url');
+        const months = parseInt(badge.getAttribute('data-months'), 10) || 6;
         
         // Calculate values
-        const sixMonthsMonthly = monthlyPrice * 6;
-        const savings = sixMonthsMonthly - pifPrice;
+        const monthsMonthly = monthlyPrice * months;
+        const savings = monthsMonthly - pifPrice;
+        const monthsFree = Math.round(savings / monthlyPrice * 10) / 10;
         
         // Update modal content
         const tierDisplayName = tierName.toUpperCase().includes('SESSION') 
           ? tierName.toUpperCase() 
           : tierName.toUpperCase() + ' SESSIONS';
         document.getElementById('savings-tier-name').textContent = tierDisplayName;
-        document.getElementById('savings-monthly-total').textContent = `$${sixMonthsMonthly.toLocaleString()}`;
+        document.getElementById('savings-subtitle').textContent = months + '-Month Paid In Full';
+        document.getElementById('savings-monthly-label').textContent = months + ' months month-to-month:';
+        document.getElementById('savings-pif-label').textContent = months + ' months paid in full:';
+        document.getElementById('savings-monthly-total').textContent = `$${monthsMonthly.toLocaleString()}`;
         document.getElementById('savings-pif-total').textContent = `$${pifPrice.toLocaleString()}`;
         document.getElementById('savings-amount').textContent = `$${savings.toLocaleString()}`;
+        document.getElementById('savings-note-text').textContent = "That's like getting " + (monthsFree % 1 === 0 ? monthsFree : monthsFree.toFixed(1)) + " months FREE!";
         
         // Update renew button
         const renewButton = document.getElementById('savings-renew-button');
-        renewButton.setAttribute('data-url', renewUrl);
+        renewButton.setAttribute('data-url', renewUrl || '#');
         
         // Show modal
         savingsModal.style.display = 'flex';

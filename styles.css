@@ -18,6 +18,8 @@
   --accent-red-bg: #fef2f2;
   --pif-bg: linear-gradient(135deg, #fef2f2 0%, #ffffff 100%);
   --pif-border: #fecaca;
+  --pif-alt-bg: linear-gradient(135deg, #eff6ff 0%, #f8fafc 100%);
+  --pif-alt-border: #bfdbfe;
   --monthly-bg: linear-gradient(135deg, #f9fafb 0%, #ffffff 100%);
   --monthly-border: #e5e7eb;
   --tier-border: rgba(229, 231, 235, 0.5);
@@ -42,6 +44,8 @@
   --accent-red-bg: #2a1a1a;
   --pif-bg: linear-gradient(135deg, #3a1f1f 0%, #1f1f1f 100%);
   --pif-border: #5a2a2a;
+  --pif-alt-bg: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%);
+  --pif-alt-border: #334155;
   --monthly-bg: linear-gradient(135deg, #1f2937 0%, #111827 100%);
   --monthly-border: #374151;
   --tier-border: rgba(55, 65, 81, 0.5);
@@ -566,6 +570,15 @@ body {
   transform: translateY(-6px);
   box-shadow: var(--shadow-md);
   border-color: var(--accent-red);
+}
+
+.pricing-option.pif-option.pif-option-alt {
+  background: var(--pif-alt-bg);
+  border-color: var(--pif-alt-border);
+}
+
+.pricing-option.pif-option.pif-option-alt:hover {
+  border-color: var(--pif-alt-border);
 }
 
 .pricing-option.monthly-option {

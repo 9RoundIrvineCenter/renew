@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>9Round Irvine Center - Paid In Full Options</title>
+  <title>9Round Irvine Center - Renewal Paid In Full Options</title>
   <link rel="icon" type="image/png" sizes="96x96" href="../images/favicon-96x96.png">
   <link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
   <link rel="shortcut icon" href="../images/favicon.ico" type="image/x-icon">
@@ -17,6 +17,29 @@
     <div class="logo-container">
       <img src="../images/9round-white-logo.png" alt="9Round Logo" class="logo">
     </div>
+
+    <section class="renewal-hero" aria-label="Membership renewal information">
+      <p class="renewal-hero-kicker">MEMBERSHIP RENEWAL</p>
+      <h1 class="renewal-hero-title">Keep your momentum going.</h1>
+      <p class="renewal-hero-subtitle">Choose your paid-in-full renewal plan below and lock in your next training block.</p>
+      <div class="renewal-hero-promo">
+        <span class="renewal-hero-promo-label">Promo Code</span>
+        <span class="renewal-hero-promo-value" id="renewalPromoCode">RENEW</span>
+        <button
+          type="button"
+          class="promo-copy-button"
+          id="copyRenewCodeBtn"
+          aria-label="Copy promo code RENEW"
+          title="Copy promo code"
+        >
+          <svg class="promo-copy-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M9 9h11v11H9z"></path>
+            <path d="M4 4h11v2H6v9H4z"></path>
+          </svg>
+          <span class="promo-copy-text">Copy</span>
+        </button>
+      </div>
+    </section>
 
     <div class="benefits-section">
       <ul class="benefits-list">
@@ -519,6 +542,54 @@
         }
       });
     });
+
+    (function() {
+      const copyButton = document.getElementById('copyRenewCodeBtn');
+      const promoCodeEl = document.getElementById('renewalPromoCode');
+      if (!copyButton || !promoCodeEl) return;
+
+      let copyResetTimeout = null;
+
+      function setCopiedState() {
+        copyButton.classList.add('copied');
+        const copyText = copyButton.querySelector('.promo-copy-text');
+        if (copyText) copyText.textContent = 'Copied';
+        if (copyResetTimeout) clearTimeout(copyResetTimeout);
+        copyResetTimeout = setTimeout(() => {
+          copyButton.classList.remove('copied');
+          if (copyText) copyText.textContent = 'Copy';
+        }, 1800);
+      }
+
+      function fallbackCopyText(text) {
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        textArea.setAttribute('readonly', '');
+        textArea.style.position = 'fixed';
+        textArea.style.opacity = '0';
+        document.body.appendChild(textArea);
+        textArea.select();
+        const ok = document.execCommand('copy');
+        document.body.removeChild(textArea);
+        return ok;
+      }
+
+      async function copyPromoCode() {
+        const code = promoCodeEl.textContent.trim();
+        try {
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(code);
+          } else if (!fallbackCopyText(code)) {
+            throw new Error('Clipboard copy failed');
+          }
+          setCopiedState();
+        } catch (err) {
+          alert('Unable to copy automatically. Promo code: ' + code);
+        }
+      }
+
+      copyButton.addEventListener('click', copyPromoCode);
+    })();
   </script>
 </body>
 </html>

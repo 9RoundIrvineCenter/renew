@@ -152,6 +152,119 @@ body {
   filter: none;
 }
 
+/* Renewal Hero */
+.renewal-hero {
+  margin: -10px auto 42px;
+  max-width: 920px;
+  text-align: center;
+  padding: 36px 32px;
+  border-radius: 22px;
+  border: 1px solid var(--border-color);
+  background:
+    radial-gradient(circle at 12% 20%, rgba(200, 15, 46, 0.12), transparent 48%),
+    radial-gradient(circle at 88% 82%, rgba(200, 15, 46, 0.08), transparent 44%),
+    var(--bg-secondary);
+  box-shadow: var(--shadow);
+  animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.15s both;
+}
+
+.renewal-hero-kicker {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2.8px;
+  color: var(--accent-red);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.renewal-hero-title {
+  font-size: clamp(28px, 4.1vw, 44px);
+  line-height: 1.1;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  margin-bottom: 14px;
+}
+
+.renewal-hero-subtitle {
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--text-secondary);
+  max-width: 680px;
+  margin: 0 auto 22px;
+}
+
+.renewal-hero-promo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(200, 15, 46, 0.35);
+  background: rgba(200, 15, 46, 0.1);
+}
+
+.renewal-hero-promo-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.renewal-hero-promo-value {
+  font-size: 16px;
+  line-height: 1;
+  font-weight: 900;
+  letter-spacing: 1.8px;
+  color: var(--accent-red);
+}
+
+.promo-copy-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgba(200, 15, 46, 0.35);
+  background: var(--bg-primary);
+  color: var(--accent-red);
+  border-radius: 999px;
+  padding: 6px 11px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.promo-copy-button:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.promo-copy-button:focus {
+  outline: 2px solid var(--accent-red);
+  outline-offset: 2px;
+}
+
+.promo-copy-icon {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+}
+
+.promo-copy-button.copied {
+  background: var(--accent-red);
+  color: #fff;
+  border-color: var(--accent-red);
+}
+
+[data-theme="dark"] .renewal-hero {
+  border-color: var(--border-color);
+  background:
+    radial-gradient(circle at 12% 20%, rgba(255, 77, 109, 0.2), transparent 46%),
+    radial-gradient(circle at 88% 82%, rgba(255, 77, 109, 0.14), transparent 40%),
+    var(--bg-secondary);
+}
+
 /* Premium Benefits Section */
 .benefits-section {
   margin-bottom: 65px;
@@ -1489,6 +1602,44 @@ footer {
     border-radius: 0;
   }
 
+  .renewal-hero {
+    margin-top: -4px;
+    margin-bottom: 34px;
+    padding: 28px 22px;
+    border-radius: 18px;
+  }
+
+  .renewal-hero-kicker {
+    font-size: 10px;
+    letter-spacing: 2.2px;
+  }
+
+  .renewal-hero-subtitle {
+    font-size: 14px;
+    margin-bottom: 18px;
+  }
+
+  .renewal-hero-promo {
+    gap: 8px;
+    padding: 9px 12px;
+  }
+
+  .renewal-hero-promo-value {
+    font-size: 14px;
+    letter-spacing: 1.4px;
+  }
+
+  .promo-copy-button {
+    padding: 5px 10px;
+    font-size: 11px;
+    gap: 5px;
+  }
+
+  .promo-copy-icon {
+    width: 13px;
+    height: 13px;
+  }
+
   .benefits-section::before {
     font-size: 10px;
     letter-spacing: 2px;
@@ -1890,6 +2041,19 @@ footer {
   .benefits-section {
     padding: 0;
     margin-top: -15px;
+  }
+
+  .renewal-hero {
+    padding: 24px 16px;
+  }
+
+  .renewal-hero-subtitle {
+    font-size: 13px;
+  }
+
+  .renewal-hero-promo {
+    flex-wrap: wrap;
+    justify-content: center;
   }
 
   .benefits-list {
